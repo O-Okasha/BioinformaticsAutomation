@@ -1,4 +1,4 @@
-from fileinput import filename
+
 from Bio import SeqIO
 from Bio.SeqUtils import GC
 import pandas as pd
@@ -11,13 +11,13 @@ class StatisticsOperations:
         self.fileName = None
         self.file = None
         self.SeqFile = None
-
+        
     def getInput(self, fileName: str):
 
         if '.fastq' in fileName:
             with open(fileName) as f:
                 FileHandler.convertFastqToFasta(f, fileName)
-        self.SeqFile = SeqIO.parse('fastafile.fasta', 'fasta')
+        self.SeqFile = SeqIO.parse(fileName, 'fasta')
         
 
     def getCGContent(self):
@@ -35,9 +35,11 @@ class StatisticsOperations:
 
         file = self.SeqFile
         output = []
+        print(11)
         for cur_record in file :
-
+            print(11)
             gene_name = cur_record.name
+            print(gene_name)
             A_count = cur_record.seq.count('A')
             C_count = cur_record.seq.count('C')
             G_count = cur_record.seq.count('G')
@@ -45,5 +47,4 @@ class StatisticsOperations:
 
             output.append([gene_name, A_count, C_count, G_count, T_count])
         return output
-    
     

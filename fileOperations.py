@@ -5,12 +5,8 @@ class FileHandler:
     def __init__(self):
         pass
 
-    def convertFastqToFasta(self, data = None, fileName = None, outfile = 'fastafile.fasta'):
+    def convertFastqToFasta(self, fileName, outfile = 'fastafile.fasta'):
 
-        #data, fileName = self.getFile()
-
-        self.validateFastq(data, fileName)
-        
         if '.fasta' not in outfile:
             outfile += '.fasta'
 
@@ -35,7 +31,7 @@ class FileHandler:
 
 
             if not read[0].startswith('@'):
-                raise Exception('invalid ID at', readNumber)
+                return False, 'invalid ID at '+ str(readNumber)
                 
 
             sequence = read[1].strip()
@@ -45,21 +41,22 @@ class FileHandler:
 
                 if i not in ['A', 'T', 'C', 'G', 'N']:
                     print(i)
-                    print('Corrupted sequence at read', readNumber)
+                    return False, 'Corrupted sequence at read ' + str(readNumber)
             
             delimiter = read[2].strip()
 
             if delimiter != '+':
                 print(delimiter)
-                print('Broken read at', readNumber)
+                return False, 'Broken read at '+ str(readNumber)
                 break 
 
             qualityLine = read[3].strip()
 
             if len(qualityLine) != seqLength:
-                print('Quality length not equal read length at', readNumber)
+                return False, 'Quality length not equal read length at ' + str(readNumber)
             
             startIndex = line + 1
+        return True, ''
         print('File', fileName, 'is valid.')
 
 
